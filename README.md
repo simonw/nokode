@@ -124,7 +124,7 @@ Or for Cerebras:
 ```env
 LLM_PROVIDER=cerebras
 CEREBRAS_API_KEY=your-cerebras-key
-CEREBRAS_MODEL=llama3.1-8b
+CEREBRAS_MODEL=qwen-3-coder-480b
 ```
 
 ```bash

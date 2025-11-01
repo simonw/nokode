@@ -12,7 +12,7 @@ const config = {
     apiKey: process.env.OPENAI_API_KEY
   },
   cerebras: {
-    model: process.env.CEREBRAS_MODEL || 'llama3.1-8b',
+    model: process.env.CEREBRAS_MODEL || 'qwen-3-coder-480b',
     apiKey: process.env.CEREBRAS_API_KEY
   }
 };
