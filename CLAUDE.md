@@ -77,6 +77,12 @@ ANTHROPIC_MODEL=claude-3-haiku-20240307
 - `claude-3-haiku-20240307` - Recommended (fastest, cheapest)
 - `claude-3-7-sonnet-20250219` - More capable, slower
 - `gpt-4o-mini` - OpenAI alternative
+- `qwen-3-coder-480b` - Cerebras (ultra-fast inference)
+
+**Providers:**
+- `anthropic` - Claude models (Anthropic API)
+- `openai` - GPT models (OpenAI API)
+- `cerebras` - Llama models (Cerebras ultra-fast inference via OpenAI-compatible API)
 
 **Don't use reasoning models** (like gpt-5-nano) unless you want 60+ second response times.
 

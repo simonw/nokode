@@ -120,6 +120,13 @@ ANTHROPIC_API_KEY=sk-ant-...
 ANTHROPIC_MODEL=claude-3-haiku-20240307
 ```
 
+Or for Cerebras:
+```env
+LLM_PROVIDER=cerebras
+CEREBRAS_API_KEY=your-cerebras-key
+CEREBRAS_MODEL=qwen-3-coder-480b
+```
+
 ```bash
 npm start
 ```
