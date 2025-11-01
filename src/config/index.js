@@ -10,6 +10,10 @@ const config = {
   openai: {
     model: process.env.OPENAI_MODEL || 'gpt-4-turbo-preview',
     apiKey: process.env.OPENAI_API_KEY
+  },
+  cerebras: {
+    model: process.env.CEREBRAS_MODEL || 'llama3.1-8b',
+    apiKey: process.env.CEREBRAS_API_KEY
   }
 };
 

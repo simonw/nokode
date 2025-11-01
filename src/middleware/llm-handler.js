@@ -1,6 +1,6 @@
 const { generateText, tool, stepCountIs } = require('ai');
 const { anthropic } = require('@ai-sdk/anthropic');
-const { openai } = require('@ai-sdk/openai');
+const { openai, createOpenAI } = require('@ai-sdk/openai');
 const config = require('../config');
 const tools = require('../tools');
 const loadPrompt = require('../utils/prompt-loader');
@@ -71,6 +71,12 @@ async function handleLLMRequest(req, res) {
     let model;
     if (config.provider === 'openai') {
       model = openai(config.openai.model);
+    } else if (config.provider === 'cerebras') {
+      const cerebras = createOpenAI({
+        apiKey: config.cerebras.apiKey,
+        baseURL: 'https://api.cerebras.ai/v1'
+      });
+      model = cerebras(config.cerebras.model);
     } else {
       model = anthropic(config.anthropic.model);
     }
@@ -107,7 +113,10 @@ async function handleLLMRequest(req, res) {
       .replace('{{MEMORY}}', memory + cachedSchema + databaseContext);
 
     // Log model selection
-    Logger.info('llm', `Using ${config.provider} provider with model ${config.provider === 'openai' ? config.openai.model : config.anthropic.model}`, {
+    const modelName = config.provider === 'openai' ? config.openai.model : 
+                      config.provider === 'cerebras' ? config.cerebras.model : 
+                      config.anthropic.model;
+    Logger.info('llm', `Using ${config.provider} provider with model ${modelName}`, {
       requestId,
       provider: config.provider
     });
