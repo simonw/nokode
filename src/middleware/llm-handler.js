@@ -6,6 +6,7 @@ const tools = require('../tools');
 const loadPrompt = require('../utils/prompt-loader');
 const loadMemory = require('../utils/memory-loader');
 const Logger = require('../utils/logger');
+const { getModelName } = require('../utils/model-selector');
 const Database = require('better-sqlite3');
 const path = require('path');
 
@@ -69,16 +70,28 @@ async function handleLLMRequest(req, res) {
 
     // Determine which model to use
     let model;
-    if (config.provider === 'openai') {
-      model = openai(config.openai.model);
-    } else if (config.provider === 'cerebras') {
-      const cerebras = createOpenAI({
-        apiKey: config.cerebras.apiKey,
-        baseURL: 'https://api.cerebras.ai/v1'
-      });
-      model = cerebras(config.cerebras.model);
-    } else {
-      model = anthropic(config.anthropic.model);
+    switch (config.provider) {
+      case 'openai':
+        if (!config.openai.apiKey) {
+          throw new Error('OPENAI_API_KEY is required when using OpenAI provider');
+        }
+        model = openai(config.openai.model);
+        break;
+      case 'cerebras':
+        if (!config.cerebras.apiKey) {
+          throw new Error('CEREBRAS_API_KEY is required when using Cerebras provider');
+        }
+        const cerebras = createOpenAI({
+          apiKey: config.cerebras.apiKey,
+          baseURL: 'https://api.cerebras.ai/v1'
+        });
+        model = cerebras(config.cerebras.model);
+        break;
+      default:
+        if (!config.anthropic.apiKey) {
+          throw new Error('ANTHROPIC_API_KEY is required when using Anthropic provider');
+        }
+        model = anthropic(config.anthropic.model);
     }
 
     // Load memory and prompt
@@ -113,9 +126,7 @@ async function handleLLMRequest(req, res) {
       .replace('{{MEMORY}}', memory + cachedSchema + databaseContext);
 
     // Log model selection
-    const modelName = config.provider === 'openai' ? config.openai.model : 
-                      config.provider === 'cerebras' ? config.cerebras.model : 
-                      config.anthropic.model;
+    const modelName = getModelName(config);
     Logger.info('llm', `Using ${config.provider} provider with model ${modelName}`, {
       requestId,
       provider: config.provider
