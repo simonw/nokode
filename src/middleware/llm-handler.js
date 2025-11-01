@@ -154,7 +154,8 @@ async function handleLLMRequest(req, res) {
       prompt,
       maxTokens: 50000, // High limit - let the AI generate what it needs
       stopWhen: stepCountIs(10), // Allow more steps for complex operations
-      // For reasoning models like gpt-5-nano, minimize thinking time
+      // For OpenAI reasoning models (e.g., o1, o3) minimize thinking time
+      // Note: These parameters are specific to OpenAI and not supported by Cerebras/Anthropic
       ...(config.provider === 'openai' && {
         reasoningEffort: 'minimal', // Minimize internal reasoning for faster responses
         maxCompletionTokens: 8000 // Separate limit for output tokens
